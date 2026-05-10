@@ -4,6 +4,8 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {Route, Routes} from 'react-router-dom';
 import SignUp from './pages/signUp/signUp.jsx';
+import Home from './pages/home/home.jsx';
+import { VerifyUser } from './utils/verifyUser.jsx';
 
 function App() {
 
@@ -14,6 +16,9 @@ function App() {
         <Routes>  
           <Route path="/signin" element={<SignIn />} />
           <Route path='/signup' element={<SignUp />} />
+          <Route element={<VerifyUser />}>
+          <Route path='/' element={<Home />} />
+          </Route>
         </Routes>
       </div>
     <ToastContainer />
