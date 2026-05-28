@@ -3,7 +3,7 @@ import { IoArrowBackSharp, IoSend } from "react-icons/io5";
 import { TiMessages } from "react-icons/ti";
 import { useAuth } from "../../../context/authContext";
 import useConversationStore from "../../../zustand/useConversation";
-import axios from "axios";
+import axios from "../../../utils/axiosConfig.js";
 import notify from '../../../assets/notifications.wav'
 import { useSocketContext } from "../../../context/socketContext";
 

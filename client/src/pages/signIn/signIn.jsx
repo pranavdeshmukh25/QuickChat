@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useAuth } from '../../context/authContext.jsx';
 import { useNavigate } from 'react-router-dom';
+import axios from "../../utils/axiosConfig.js"
 
 
 const SignIn = () => {
