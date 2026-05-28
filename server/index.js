@@ -7,8 +7,14 @@ import userRoute from './route/userRoute.js';
 import cookieParser from 'cookie-parser';
 import {app, server} from './socket/socket.js';
 import path from 'path';
+import cors from 'cors';
 
 dotenv.config();
+
+app.use(cors({
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    credentials: true
+}));
 
 const __dirname = path.resolve();
 
@@ -25,12 +31,6 @@ app.get('/', (req, res) => {
 app.use('/api/auth', authRoute);
 app.use('/api/message', messageRoute);
 app.use('/api/user', userRoute);
-
-app.use(express.static(path.join(__dirname, '../client/dist')));
-
-app.get("", (req,res)=>{
-    res.sendFile(path.join(__dirname, '../client', 'dist', 'index.html'));
-});
 
 server.listen(PORT, () => {
     dbConnect();
