@@ -36,6 +36,7 @@ const Profile = ({ onClose }) => {
   const [previewImage, setPreviewImage] = useState('');
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState(''); // 'success' or 'error'
+  const [showPassword, setShowPassword] = useState(false);
 
   const fetchUserProfile = async () => {
     try {
