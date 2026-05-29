@@ -114,7 +114,7 @@ const Sidebar = ({onSelectUser, setShowProfile}) => {
     }
 
   return (
-    <div className="w-full w-auto px-1 h-full flex flex-col">
+    <div className="w-full w-auto px-1 py-2 h-full flex flex-col">
       <div className="flex justify-between gap-2 pb-3">
         <form
           onSubmit={handleSearchSubmit}
