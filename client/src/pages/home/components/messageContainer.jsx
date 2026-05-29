@@ -3,7 +3,7 @@ import { IoArrowBackSharp, IoSend } from "react-icons/io5";
 import { TiMessages } from "react-icons/ti";
 import { useAuth } from "../../../context/authContext";
 import useConversationStore from "../../../zustand/useConversation";
-import axios from "../../../utils/axiosConfig.js";
+import axiosInstance from "../../../utils/axiosConfig.js";
 import notify from '../../../assets/notifications.wav'
 import { useSocketContext } from "../../../context/socketContext";
 
@@ -44,7 +44,7 @@ const MessageContainer = ({ onBackUser }) => {
     const getMessages = async () => {
       setLoading(true);
       try {
-        const get = await axios.get(
+        const get = await axiosInstance.get(
           `/api/message/${selectedConversation?._id}`,
         );
         const data = await get.data;
@@ -71,7 +71,7 @@ const MessageContainer = ({ onBackUser }) => {
         e.preventDefault();
         setSending(true);
         try {
-            const res =await axios.post(`/api/message/send/${selectedConversation?._id}`,{messages:sendData});
+            const res =await axiosInstance.post(`/api/message/send/${selectedConversation?._id}`,{messages:sendData});
             const data = await res.data;
             if (data.success === false) {
                 setSending(false);

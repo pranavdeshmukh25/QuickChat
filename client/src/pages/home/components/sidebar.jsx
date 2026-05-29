@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
-import axios from "../../../utils/axiosConfig.js";
+import axiosInstance from "../../../utils/axiosConfig.js";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/authContext";
@@ -36,7 +36,7 @@ const Sidebar = ({onSelectUser}) => {
     const chatUserHandler = async () => {
       setLoading(true);
       try {
-        const chatUser = await axios.get("/api/user/currentchatters");
+        const chatUser = await axiosInstance.get("/api/user/currentchatters");
         const data = chatUser.data;
         if (data.success === false) {
           setLoading(false);
@@ -56,7 +56,7 @@ const Sidebar = ({onSelectUser}) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const search = await axios.get(`/api/user/search?search=${searchInput}`);
+      const search = await axiosInstance.get(`/api/user/search?search=${searchInput}`);
       const data = search.data;
       if (data.success === false) {
         setLoading(false);
@@ -92,7 +92,7 @@ const Sidebar = ({onSelectUser}) => {
         if (confirmlogout === authUser.username) {
             setLoading(true)
             try {
-                const logout = await axios.post('/api/auth/logout')
+                const logout = await axiosInstance.post('/api/auth/logout')
                 const data = logout.data;
                 if (data?.success === false) {
                     setLoading(false)

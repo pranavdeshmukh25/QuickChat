@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAuth } from '../../context/authContext.jsx';
 import { useNavigate } from 'react-router-dom';
-import axios from "../../utils/axiosConfig.js"
+import axiosInstance from "../../utils/axiosConfig.js"
 
 
 const SignIn = () => {
@@ -25,7 +25,7 @@ const SignIn = () => {
         e.preventDefault();
         setLoading(true)
         try {
-            const login = await axios.post(`/api/auth/login`, userInput);
+            const login = await axiosInstance.post(`/api/auth/login`, userInput);
             const data = login.data;
             if (data.success === false) {
                 setLoading(false)

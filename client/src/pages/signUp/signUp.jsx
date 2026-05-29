@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { Link } from 'react-router-dom';
-import axios from '../../utils/axiosConfig.js'
+import axiosInstance from '../../utils/axiosConfig.js'
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/authContext.jsx';
@@ -37,7 +37,7 @@ const SignUp = () => {
             return toast.error("Password Dosen't match")
         }
         try {
-            const register = await axios.post(`/api/auth/register`,inputData);
+            const register = await axiosInstance.post(`/api/auth/register`,inputData);
             const data = register.data;
             if(data.success === false){
                 setLoading(false)
