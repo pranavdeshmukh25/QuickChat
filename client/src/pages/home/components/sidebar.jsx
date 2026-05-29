@@ -8,6 +8,84 @@ import { IoArrowBackSharp } from 'react-icons/io5';
 import { BiLogOut } from "react-icons/bi";
 import useConversationStore from "../../../zustand/useConversation";
 import { useSocketContext } from "../../../context/socketContext";
+import { MdLogout, MdClose } from "react-icons/md";
+
+
+const LogoutConfirmModal = ({ isOpen, onClose, onConfirm, loading = false }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+      {/* Backdrop */}
+      <div
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        onClick={onClose}
+      />
+
+      {/* Modal */}
+      <div className="relative w-full max-w-sm bg-gray-900 border border-gray-800 rounded-2xl shadow-2xl overflow-hidden">
+
+        {/* Top accent bar */}
+        <div className="h-1 w-full bg-gradient-to-r from-red-500 via-rose-500 to-red-400" />
+
+        {/* Content */}
+        <div className="p-6">
+          {/* Close button */}
+          <button
+            onClick={onClose}
+            disabled={loading}
+            className="absolute top-4 right-4 w-7 h-7 flex items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700 text-gray-400 hover:text-white transition disabled:opacity-50"
+          >
+            <MdClose size={15} />
+          </button>
+
+          {/* Icon */}
+          <div className="flex justify-center mb-5">
+            <div className="w-16 h-16 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center">
+              <MdLogout size={28} className="text-red-400" />
+            </div>
+          </div>
+
+          {/* Text */}
+          <div className="text-center mb-6">
+            <h2 className="text-white text-lg font-bold mb-1">Log Out?</h2>
+            <p className="text-gray-400 text-sm">
+              Are you sure you want to log out? You'll need to sign in again to access your account.
+            </p>
+          </div>
+
+          {/* Buttons */}
+          <div className="flex gap-3">
+            <button
+              onClick={onClose}
+              disabled={loading}
+              className="flex-1 py-2.5 rounded-xl bg-gray-800 hover:bg-gray-700 text-white text-sm font-semibold transition disabled:opacity-50"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={onConfirm}
+              disabled={loading}
+              className="flex-1 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white text-sm font-semibold transition disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg shadow-red-500/20"
+            >
+              {loading ? (
+                <>
+                  <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  Logging out...
+                </>
+              ) : (
+                <>
+                  <MdLogout size={16} />
+                  Log Out
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const Sidebar = ({onSelectUser, setShowProfile}) => {
   const navigate = useNavigate();
@@ -20,6 +98,8 @@ const Sidebar = ({onSelectUser, setShowProfile}) => {
   const [newMessageUsers, setNewMessageUsers] = useState([]);
   const { selectedConversation, setSelectedConversation, messages, setMessages } = useConversationStore();
     const { onlineUsers , socket} = useSocketContext();
+  const [showLogout, setShowLogout] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
 
     const nowOnline = chatUser.map((user)=>(user._id));
       //chats function
@@ -87,10 +167,7 @@ const Sidebar = ({onSelectUser, setShowProfile}) => {
     }
 
      const handleLogOut = async () => {
-
-        const confirmlogout = window.prompt("type 'UserName' To LOGOUT");
-        if (confirmlogout === authUser.username) {
-            setLoading(true)
+        setLoggingOut(true);
             try {
                 const logout = await axiosInstance.post('/api/auth/logout')
                 const data = logout.data;
@@ -107,10 +184,6 @@ const Sidebar = ({onSelectUser, setShowProfile}) => {
                 setLoading(false)
                 console.log(error);
             }
-        } else {
-            toast.info("LogOut Cancelled")
-        }
-
     }
 
   return (
@@ -233,12 +306,18 @@ const Sidebar = ({onSelectUser, setShowProfile}) => {
             </div>
           </div>
           <div className='mt-auto px-1 py-2 flex gap-2 border-t border-gray-800 pt-3'>
-            <button onClick={handleLogOut} className='hover:bg-red-600 w-10 cursor-pointer hover:text-white rounded-lg bg-gray-800 text-gray-300 transition py-1'>
+            <button onClick={() => setShowLogout(true)} className='hover:bg-red-600 w-10 cursor-pointer hover:text-white rounded-lg bg-gray-800 text-gray-300 transition py-1'>
               <BiLogOut size={25} />
             </button>
             <p className='text-sm py-1 text-gray-400'>Logout</p>
           </div>
         </div>
+        <LogoutConfirmModal
+        isOpen={showLogout}
+        onClose={() => !loggingOut && setShowLogout(false)}
+        onConfirm={handleLogOut}
+        loading={loggingOut}
+      />
           </>
       )}
     </div>
