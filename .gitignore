@@ -1,0 +1,8 @@
+.env
+client/.env.production
+server/.env
+
+# optional variants
+.env.local
+.env.development.local
+.env.production.local
