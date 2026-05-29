@@ -134,7 +134,7 @@ useEffect(() => {
   }
 
   return (
-    <div className="w-full min-h-screen bg-gray-950 flex items-center justify-center p-4">
+    <div className="w-full min-h-screen flex items-center justify-center">
       <div className="w-full max-w-sm bg-gray-900 rounded-2xl shadow-2xl overflow-hidden border border-gray-800">
  
         {/* Cover Banner */}
