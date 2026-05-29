@@ -134,8 +134,8 @@ useEffect(() => {
   }
 
   return (
-    <div className="w-full min-h-screen flex items-center justify-center">
-      <div className="w-full max-w-sm bg-gray-900 rounded-2xl shadow-2xl overflow-hidden border border-gray-800">
+    <div className="w-full min-h-screen">
+      <div className="w-full bg-gray-900 shadow-2xl overflow-hidden border border-gray-800">
  
         {/* Cover Banner */}
         <div className="relative h-28 bg-gradient-to-br from-blue-600 via-blue-500 to-indigo-600">
