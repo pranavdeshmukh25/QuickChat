@@ -118,6 +118,12 @@ useEffect(() => {
     .toUpperCase()
     .slice(0, 2);
 
+    const fields = [
+    { label: "Full Name", name: "fullname", type: "text", icon: <MdPerson size={16} />, placeholder: "Enter full name" },
+    { label: "Username", name: "username", type: "text", icon: <MdAlternateEmail size={16} />, placeholder: "Enter username" },
+    { label: "Email", name: "email", type: "email", icon: <MdEmail size={16} />, placeholder: "Enter email" },
+  ];
+
   if (loading) {
     return (
       <div className="w-full h-full flex items-center justify-center bg-gray-900 rounded-xl shadow-2xl border border-gray-800">
