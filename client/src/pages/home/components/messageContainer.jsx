@@ -87,7 +87,7 @@ const MessageContainer = ({ onBackUser }) => {
     }
 
   return (
-    <div className="md:min-w-[500px] h-[99%] flex flex-col py-2">
+    <div className="md:min-w-[500px] h-[99%] flex flex-col">
       {selectedConversation === null ? (
         <div className="flex items-center justify-center w-full h-full bg-gray-900">
           <div
@@ -101,7 +101,7 @@ const MessageContainer = ({ onBackUser }) => {
         </div>
       ) : (
         <>
-          <div className="flex justify-between gap-1 bg-gray-800 md:px-2 rounded-lg h-10 md:h-12 border-b border-gray-700">
+          <div className="flex justify-between gap-1 bg-gray-800 md:px-2 h-10 md:h-12 border-b border-gray-700">
             <div className="flex gap-2 md:justify-between items-center w-full">
               <div className="md:hidden ml-1 self-center">
                 <button

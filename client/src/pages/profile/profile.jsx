@@ -12,6 +12,7 @@ import {
   MdWc,
   MdLock,
 } from "react-icons/md";
+import { useAuth } from "../../context/authContext";
 
 
 const Profile = ({ onClose }) => {
@@ -37,6 +38,7 @@ const Profile = ({ onClose }) => {
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState(''); // 'success' or 'error'
   const [showPassword, setShowPassword] = useState(false);
+  const {setAuthUser} = useAuth();
 
   const fetchUserProfile = async () => {
     try {
@@ -94,6 +96,8 @@ useEffect(() => {
       const response = await axiosInstance.put('/api/user/profile/update', formData);
       if (response.data.success) {
         setUserInfo(response.data.user);
+        setAuthUser(response.data.user); // Update user in context
+        localStorage.setItem('chatapp',JSON.stringify(response.data.user));
         setIsEditing(false);
         showMessage('Profile updated successfully', 'success');
       }
