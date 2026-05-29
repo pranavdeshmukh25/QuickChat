@@ -6,7 +6,7 @@ export const sendMessage =async(req,res)=>{
 try {
     const {messages} = req.body;
     const {id:reciverId} = req.params;
-    const senderId = req.user._conditions._id;
+    const senderId = req.user._id;
 
 
     let chats = await Conversation.findOne({
@@ -53,7 +53,7 @@ try {
 export const getMessages=async(req,res)=>{
 try {
     const {id:reciverId} = req.params;
-    const senderId = req.user._conditions._id;
+    const senderId = req.user._id;
 
     const chats = await Conversation.findOne({
         participants:{$all:[senderId , reciverId]}
