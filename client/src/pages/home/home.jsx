@@ -21,9 +21,6 @@ const Home = () => {
     setShowProfile(false);
   };
 
-  if (showProfile) {
-    return <Profile onClose={handleCloseProfile} />;
-  }
 
   return (
      <div className="w-screen h-screen bg-gray-950 flex overflow-hidden">
@@ -41,11 +38,15 @@ const Home = () => {
           md:flex
         `}
       >
-        {/* Replace with your <Sidebar /> component */}
-        <Sidebar
-          onSelectUser={handelUserSelect}
-          setShowProfile={setShowProfile}
-        />
+        
+        {showProfile ? (
+          <Profile onClose={handleCloseProfile} />
+        ) : (
+          <Sidebar
+            onSelectUser={handelUserSelect}
+            setShowProfile={setShowProfile}
+          />
+        )}
       </aside>
  
       {/* ── Thin divider — desktop only ──────────────────────────────────── */}
