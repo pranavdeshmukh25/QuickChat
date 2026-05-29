@@ -23,7 +23,7 @@ const Home = () => {
 
 
   return (
-     <div className="w-screen h-screen bg-gray-950 flex overflow-hidden">
+     <div style={{zoom: 0.9, transformOrigin:'top left'}} className="w-screen h-screen bg-gray-950 flex overflow-hidden">
  
       {/* ── Sidebar — always 30% on desktop, full-width slide on mobile ───── */}
       <aside
