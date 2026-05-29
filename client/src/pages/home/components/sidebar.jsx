@@ -9,7 +9,7 @@ import { BiLogOut } from "react-icons/bi";
 import useConversationStore from "../../../zustand/useConversation";
 import { useSocketContext } from "../../../context/socketContext";
 
-const Sidebar = ({onSelectUser}) => {
+const Sidebar = ({onSelectUser, setShowProfile}) => {
   const navigate = useNavigate();
   const { authUser, setAuthUser } = useAuth();
   const [searchInput, setSearchInput] = useState("");
@@ -132,7 +132,7 @@ const Sidebar = ({onSelectUser}) => {
           </button>
         </form>
         <img
-          onClick={() => navigate(`/profile/${authUser?._id}`)}
+          onClick={() => setShowProfile(true)}
           src={authUser?.profilepic}
           className="self-center h-12 w-12 hover:scale-110 cursor-pointer rounded-full border border-gray-700 transition"
         />
