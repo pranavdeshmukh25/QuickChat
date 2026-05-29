@@ -118,7 +118,7 @@ const Sidebar = ({onSelectUser, setShowProfile}) => {
       <div className="flex justify-between gap-2 pb-3">
         <form
           onSubmit={handleSearchSubmit}
-          className="w-auto flex items-center justify-between bg-gray-800 rounded-full border border-gray-700 hover:border-gray-600 transition"
+          className="w-full flex items-center justify-between bg-gray-800 rounded-full border border-gray-700 hover:border-gray-600 transition"
         >
           <input
             value={searchInput}
