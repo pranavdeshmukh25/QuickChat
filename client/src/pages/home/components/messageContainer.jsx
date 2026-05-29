@@ -87,7 +87,7 @@ const MessageContainer = ({ onBackUser }) => {
     }
 
   return (
-    <div style={{zoom: 0.9, transformOrigin:'top left'}} className="md:min-w-[500px] h-[99%] flex flex-col">
+    <div  className="md:min-w-[500px] h-[99%] flex flex-col">
       {selectedConversation === null ? (
         <div className="flex items-center justify-center w-full h-full bg-gray-900">
           <div

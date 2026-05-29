@@ -138,7 +138,7 @@ useEffect(() => {
   }
 
   return (
-    <div style={{zoom: 0.9, transformOrigin:'top left'}} className="w-full min-h-screen">
+    <div  className="w-full min-h-screen">
       <div className="w-full bg-gray-900 shadow-2xl overflow-hidden border border-gray-800">
  
         {/* Cover Banner */}

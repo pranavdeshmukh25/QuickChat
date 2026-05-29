@@ -114,7 +114,7 @@ const Sidebar = ({onSelectUser, setShowProfile}) => {
     }
 
   return (
-    <div style={{zoom: 0.9, transformOrigin:'top left'}} className="w-full w-auto px-1 py-2 h-full flex flex-col">
+    <div className="w-full w-auto px-1 py-2 h-full flex flex-col">
       <div className="flex justify-between gap-2 pb-3">
         <form
           onSubmit={handleSearchSubmit}
@@ -127,7 +127,7 @@ const Sidebar = ({onSelectUser, setShowProfile}) => {
             className="px-4 w-auto bg-transparent outline-none rounded-full text-gray-100 placeholder-gray-500"
             placeholder="search user"
           />
-          <button className="btn btn-circle bg-blue-600 hover:bg-blue-700 border-none text-white">
+          <button className="btn btn-circle border-none text-white me-1">
             <FaSearch />
           </button>
         </form>
