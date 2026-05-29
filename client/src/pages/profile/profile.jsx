@@ -1,5 +1,18 @@
 import React, { useState, useEffect } from 'react'
 import axiosInstance from '../../utils/axiosConfig'
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import {
+  MdOutlineModeEdit,
+  MdCheck,
+  MdClose,
+  MdCameraAlt,
+  MdPerson,
+  MdAlternateEmail,
+  MdEmail,
+  MdWc,
+  MdLock,
+} from "react-icons/md";
+
 
 const Profile = ({ onClose }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -24,10 +37,6 @@ const Profile = ({ onClose }) => {
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState(''); // 'success' or 'error'
 
-  useEffect(() => {
-    fetchUserProfile();
-  }, []);
-
   const fetchUserProfile = async () => {
     try {
       setLoading(true);
@@ -44,6 +53,10 @@ const Profile = ({ onClose }) => {
       setLoading(false);
     }
   };
+
+useEffect(() => {
+    fetchUserProfile();
+}, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -98,6 +111,13 @@ const Profile = ({ onClose }) => {
     setMessage('');
   };
 
+    const initials = formData.fullname
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
+
   if (loading) {
     return (
       <div className="w-full h-full flex items-center justify-center bg-gray-900 rounded-xl shadow-2xl border border-gray-800">
@@ -107,159 +127,160 @@ const Profile = ({ onClose }) => {
   }
 
   return (
-    <div className="min-w-full md:min-w-[550px] md:max-w-[65%] px-2 h-[95%] md:h-full rounded-xl shadow-2xl bg-gray-900 border border-gray-800 overflow-y-auto">
-      <div className="p-6 md:p-8">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-white">Profile</h1>
-          <button
-            onClick={onClose}
-            disabled={loading}
-            className="btn btn-sm px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors disabled:opacity-50"
-          >
-            Close
-          </button>
+    <div className="w-full min-h-screen bg-gray-950 flex items-center justify-center p-4">
+      <div className="w-full max-w-sm bg-gray-900 rounded-2xl shadow-2xl overflow-hidden border border-gray-800">
+ 
+        {/* Cover Banner */}
+        <div className="relative h-28 bg-gradient-to-br from-blue-600 via-blue-500 to-indigo-600">
+          <div className="absolute inset-0 opacity-20"
+            style={{ backgroundImage: "radial-gradient(circle at 20% 50%, white 1px, transparent 1px), radial-gradient(circle at 80% 20%, white 1px, transparent 1px)", backgroundSize: "30px 30px" }}
+          />
+          {/* Close Button */}
+          {onClose && (
+            <button
+              onClick={onClose}
+              className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-full bg-black/30 hover:bg-black/50 text-white transition"
+            >
+              <MdClose size={16} />
+            </button>
+          )}
         </div>
-
-        {/* Message */}
-        {message && (
-          <div className={`mb-6 p-4 rounded-lg ${messageType === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}>
-            {message}
-          </div>
-        )}
-
-        {/* Profile Container */}
-        <div className="bg-gray-800 rounded-lg border border-gray-700 p-6 md:p-8">
-          {/* Profile Picture Section */}
-          <div className="flex flex-col items-center mb-8">
-            <div className="w-32 h-32 rounded-full bg-gray-700 border-4 border-blue-500 overflow-hidden mb-4 flex items-center justify-center">
+ 
+        {/* Avatar */}
+        <div className="relative flex justify-center -mt-12 mb-3 px-6">
+          <div className="relative group">
+            <div className="w-24 h-24 rounded-full border-4 border-gray-900 bg-gradient-to-br from-blue-500 to-indigo-600 overflow-hidden shadow-xl flex items-center justify-center">
               {previewImage ? (
                 <img src={previewImage} alt="Profile" className="w-full h-full object-cover" />
               ) : (
-                <span className="text-gray-400 text-4xl">👤</span>
+                <span className="text-white text-2xl font-bold">{initials}</span>
               )}
             </div>
             {isEditing && (
-              <label className="cursor-pointer">
-                <span className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors inline-block">
-                  Upload Photo
-                </span>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  className="hidden"
-                  disabled={loading}
-                />
+              <label className="absolute inset-0 rounded-full flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition cursor-pointer">
+                <MdCameraAlt size={22} className="text-white" />
+                <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
               </label>
             )}
           </div>
-
-          {/* Form Fields */}
-          <div className="space-y-4">
-            {/* Full Name */}
-            <div>
-              <label className="block text-gray-300 text-sm font-semibold mb-2">Full Name</label>
+        </div>
+ 
+        {/* Name & Status */}
+        <div className="text-center px-6 mb-5">
+          <h2 className="text-lg font-bold text-white leading-tight">{formData.fullname}</h2>
+          <p className="text-sm text-gray-400">@{formData.username}</p>
+          <div className="flex items-center justify-center gap-1.5 mt-1.5">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="text-xs text-emerald-400">Online</span>
+          </div>
+        </div>
+ 
+        {/* Toast Message */}
+        {message && (
+          <div className={`mx-6 mb-4 px-4 py-2.5 rounded-xl text-sm font-medium flex items-center gap-2 ${messageType === "success" ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" : "bg-red-500/20 text-red-400 border border-red-500/30"}`}>
+            <MdCheck size={16} />
+            {message}
+          </div>
+        )}
+ 
+        {/* Fields */}
+        <div className="px-6 space-y-3 mb-4">
+          {fields.map(({ label, name, type, icon, placeholder }) => (
+            <div key={name}>
+              <label className="flex items-center gap-1.5 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
+                {icon} {label}
+              </label>
               <input
-                type="text"
-                name="fullname"
-                value={formData.fullname}
+                type={type}
+                name={name}
+                value={formData[name]}
                 onChange={handleInputChange}
                 disabled={!isEditing || loading}
-                className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg focus:outline-none focus:border-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                placeholder={placeholder}
+                className="w-full px-4 py-2.5 bg-gray-800 border border-gray-700 text-white text-sm rounded-xl focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30 disabled:opacity-60 disabled:cursor-not-allowed placeholder-gray-600 transition"
               />
             </div>
-
-            {/* Username */}
+          ))}
+ 
+          {/* Gender */}
+          <div>
+            <label className="flex items-center gap-1.5 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
+              <MdWc size={16} /> Gender
+            </label>
+            <select
+              name="gender"
+              value={formData.gender}
+              onChange={handleInputChange}
+              disabled={!isEditing || loading}
+              className="w-full px-4 py-2.5 bg-gray-800 border border-gray-700 text-white text-sm rounded-xl focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30 disabled:opacity-60 disabled:cursor-not-allowed transition appearance-none"
+            >
+              <option value="">Select Gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </div>
+ 
+          {/* Password (edit mode only) */}
+          {isEditing && (
             <div>
-              <label className="block text-gray-300 text-sm font-semibold mb-2">Username</label>
-              <input
-                type="text"
-                name="username"
-                value={formData.username}
-                onChange={handleInputChange}
-                disabled={!isEditing || loading}
-                className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg focus:outline-none focus:border-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-              />
-            </div>
-
-            {/* Email */}
-            <div>
-              <label className="block text-gray-300 text-sm font-semibold mb-2">Email</label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                disabled={!isEditing || loading}
-                className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg focus:outline-none focus:border-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-              />
-            </div>
-
-            {/* Gender */}
-            <div>
-              <label className="block text-gray-300 text-sm font-semibold mb-2">Gender</label>
-              <select
-                name="gender"
-                value={formData.gender}
-                onChange={handleInputChange}
-                disabled={!isEditing || loading}
-                className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg focus:outline-none focus:border-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <option value="">Select Gender</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-              </select>
-            </div>
-
-            {/* Password */}
-            {isEditing && (
-              <div>
-                <label className="block text-gray-300 text-sm font-semibold mb-2">New Password (optional)</label>
+              <label className="flex items-center gap-1.5 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
+                <MdLock size={16} /> New Password
+              </label>
+              <div className="relative">
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   name="password"
                   value={formData.password}
                   onChange={handleInputChange}
-                  placeholder="Leave empty to keep current password"
+                  placeholder="Leave empty to keep current"
                   disabled={loading}
-                  className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg focus:outline-none focus:border-blue-500 placeholder-gray-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full px-4 py-2.5 bg-gray-800 border border-gray-700 text-white text-sm rounded-xl focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30 disabled:opacity-60 pr-10 placeholder-gray-600 transition"
                 />
-                <p className="text-gray-400 text-xs mt-1">Minimum 6 characters</p>
+                <button
+                  onClick={() => setShowPassword(!showPassword)}
+                  tabIndex={-1}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition"
+                >
+                  {showPassword ? <AiOutlineEyeInvisible size={18} /> : <AiOutlineEye size={18} />}
+                </button>
               </div>
-            )}
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex gap-4 mt-8">
-            {!isEditing ? (
-              <button
-                onClick={() => setIsEditing(true)}
-                disabled={loading}
-                className="flex-1 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg transition-colors disabled:opacity-50"
-              >
-                Edit Profile
-              </button>
-            ) : (
-              <>
-                <button
-                  onClick={handleSave}
-                  disabled={loading}
-                  className="flex-1 px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg transition-colors disabled:opacity-50"
-                >
-                  {loading ? 'Saving...' : 'Save Changes'}
-                </button>
-                <button
-                  onClick={handleCancel}
-                  disabled={loading}
-                  className="flex-1 px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white font-semibold rounded-lg transition-colors disabled:opacity-50"
-                >
-                  Cancel
-                </button>
-              </>
-            )}
-          </div>
+              <p className="text-gray-600 text-xs mt-1 pl-1">Minimum 6 characters</p>
+            </div>
+          )}
         </div>
+ 
+        {/* Action Buttons */}
+        <div className="px-6 pb-6">
+          {!isEditing ? (
+            <button
+              onClick={() => setIsEditing(true)}
+              className="w-full flex items-center justify-center gap-2 py-2.5 bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold rounded-xl transition shadow-lg shadow-blue-500/20"
+            >
+              <MdOutlineModeEdit size={17} />
+              Edit Profile
+            </button>
+          ) : (
+            <div className="flex gap-3">
+              <button
+                onClick={handleSave}
+                disabled={loading}
+                className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold rounded-xl transition disabled:opacity-50 shadow-lg shadow-emerald-500/20"
+              >
+                <MdCheck size={17} />
+                {loading ? "Saving..." : "Save"}
+              </button>
+              <button
+                onClick={handleCancel}
+                disabled={loading}
+                className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-gray-700 hover:bg-gray-600 text-white text-sm font-semibold rounded-xl transition disabled:opacity-50"
+              >
+                <MdClose size={17} />
+                Cancel
+              </button>
+            </div>
+          )}
+        </div>
+ 
       </div>
     </div>
   )
