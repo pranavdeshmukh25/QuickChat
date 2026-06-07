@@ -1,7 +1,14 @@
 import { Server } from "socket.io";
 import http from "http";
 import express from "express";
+import dotenv from 'dotenv';
 
+// Load environment variables
+if (process.env.NODE_ENV === 'production') {
+    dotenv.config({ path: '.env' });
+} else {
+    dotenv.config({ path: '.env.local' });
+}
 
 const app = express();
 
