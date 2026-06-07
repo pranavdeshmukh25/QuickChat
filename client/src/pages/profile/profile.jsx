@@ -13,6 +13,7 @@ import {
   MdLock,
 } from "react-icons/md";
 import { useAuth } from "../../context/authContext";
+import Avatar from '../../components/avatar';
 
 
 const Profile = ({ onClose }) => {
@@ -39,6 +40,12 @@ const Profile = ({ onClose }) => {
   const [messageType, setMessageType] = useState(''); // 'success' or 'error'
   const [showPassword, setShowPassword] = useState(false);
   const {setAuthUser} = useAuth();
+
+    const showMessage = (msg, type) => {
+    setMessage(msg);
+    setMessageType(type);
+    setTimeout(() => setMessage(''), 3000);
+  };
 
   const fetchUserProfile = async () => {
     try {
@@ -82,12 +89,6 @@ useEffect(() => {
       };
       reader.readAsDataURL(file);
     }
-  };
-
-  const showMessage = (msg, type) => {
-    setMessage(msg);
-    setMessageType(type);
-    setTimeout(() => setMessage(''), 3000);
   };
 
   const handleSave = async () => {
@@ -164,7 +165,7 @@ useEffect(() => {
               {previewImage ? (
                 <img src={previewImage} alt="Profile" className="w-full h-full object-cover" />
               ) : (
-                <span className="text-white text-2xl font-bold">{initials}</span>
+                <Avatar name={formData.fullname || formData.username} size="xl" className="cursor-pointer" />
               )}
             </div>
             {isEditing && (

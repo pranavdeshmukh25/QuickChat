@@ -9,8 +9,8 @@ export const userRegister = async (req, res) => {
         const user = await User.findOne({ username, email });
         if (user) return res.status(500).send({ success: false, message: " UserName or Email Alredy Exist " });
         const hashPassword = bcryptjs.hashSync(password, 10);
-        const profileBoy = profilepic || 'https://api.dicebear.com/7.x/avataaars/svg?seed=male-default';
-        const profileGirl = profilepic || 'https://api.dicebear.com/7.x/avataaars/svg?seed=female-default';
+        const profileBoy = profilepic;
+        const profileGirl = profilepic;
 
         const newUser = new User({
             fullname,
@@ -32,7 +32,7 @@ export const userRegister = async (req, res) => {
             _id: newUser._id,
             fullname: newUser.fullname,
             username: newUser.username,
-            profilepic: newUser.profilepic,
+            profilepic: newUser.profilepic ? newUser.profilepic : "",
             email: newUser.email,
         })
     } catch (error) {
@@ -58,7 +58,7 @@ export const userLogin = async (req, res) => {
             _id: user._id,
             fullname: user.fullname,
             username: user.username,
-            profilepic: user.profilepic,
+            profilepic: user.profilepic ? user.profilepic : "",
             email:user.email,
             message: "Succesfully LogIn"
         })

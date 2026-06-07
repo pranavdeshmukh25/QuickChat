@@ -6,6 +6,7 @@ import useConversationStore from "../../../zustand/useConversation";
 import axiosInstance from "../../../utils/axiosConfig.js";
 import notify from '../../../assets/notifications.wav'
 import { useSocketContext } from "../../../context/socketContext";
+import Avatar from "../../../components/avatar.jsx";
 
 const MessageContainer = ({ onBackUser }) => {
   const { authUser } = useAuth();
@@ -113,10 +114,15 @@ const MessageContainer = ({ onBackUser }) => {
               </div>
               <div className="flex justify-between mr-2 gap-2">
                 <div className="self-center">
-                  <img
-                    className="rounded-full w-6 h-6 md:w-10 md:h-10 cursor-pointer border border-gray-700"
-                    src={selectedConversation?.profilepic}
-                  />
+                  {selectedConversation?.profilepic ? (
+                    <img
+                      className="rounded-full w-6 h-6 md:w-10 md:h-10 cursor-pointer border border-gray-700"
+                      src={selectedConversation?.profilepic}
+                    />
+                  ) : (
+                    <Avatar name={selectedConversation?.username} size="md" className="cursor-pointer" />
+                  )}
+                  
                 </div>
                 <span className="text-gray-100 self-center text-sm md:text-xl font-semibold">
                   {selectedConversation?.username}

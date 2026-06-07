@@ -9,6 +9,7 @@ import { BiLogOut } from "react-icons/bi";
 import useConversationStore from "../../../zustand/useConversation";
 import { useSocketContext } from "../../../context/socketContext";
 import { MdLogout, MdClose } from "react-icons/md";
+import Avatar from "../../../components/avatar.jsx";
 
 
 const LogoutConfirmModal = ({ isOpen, onClose, onConfirm, loading = false }) => {
@@ -204,11 +205,15 @@ const Sidebar = ({onSelectUser, setShowProfile}) => {
             <FaSearch />
           </button>
         </form>
+        {authUser?.profilepic ? (
         <img
           onClick={() => setShowProfile(true)}
           src={authUser?.profilepic}
           className="self-center h-12 w-12 hover:scale-110 cursor-pointer rounded-full border border-gray-700 transition"
         />
+        ):(
+         <Avatar name={authUser?.username} size="md" online={true} className="cursor-pointer" onClick={() => setShowProfile(true)} />
+        )}
       </div>
         <div className='divider divider-neutral px-3 my-0'></div>
       {searchUser.length > 0 ? (
@@ -224,7 +229,11 @@ const Sidebar = ({onSelectUser, setShowProfile}) => {
                 >
                   <div className="relative">
                     <div className="w-12 rounded-full border border-gray-700">
-                      <img src={user.profilepic} alt="user.img" />
+                      {user.profilepic ? (
+                        <img src={user.profilepic} alt="user.img" className="self-center h-12 w-12 hover:scale-110 cursor-pointer rounded-full border border-gray-700 transition" />
+                      ) : (
+                        <Avatar name={user.username} size="md" className="cursor-pointer" />
+                      )}
                     </div>
                     {isOnline[index] && (
                       <div className="absolute top-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-gray-900"></div>
@@ -277,7 +286,11 @@ const Sidebar = ({onSelectUser, setShowProfile}) => {
                         {/*Socket is Online*/}
                         <div className="relative">
                           <div className="w-12 rounded-full border border-gray-700">
-                            <img src={user.profilepic} alt="user.img" />
+                            {user.profilepic ? (
+                              <img src={user.profilepic} alt="user.img" className="self-center h-12 w-12 hover:scale-110 cursor-pointer rounded-full border border-gray-700 transition" />
+                            ) : (
+                              <Avatar name={user.username} size="md" className="cursor-pointer" />
+                            )}
                           </div>
                           {isOnline[index] && (
                             <div className="absolute top-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-gray-900"></div>
