@@ -188,6 +188,31 @@ const MessageContainer = ({ onBackUser }) => {
                         />
                         )
                       }
+                      {
+                        message.attachment?.fileType === "application/pdf"
+                        && (
+                        <a
+                            href={`data:application/pdf;base64,${message.attachment.fileData}`}
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            View PDF
+                        </a>
+                        )
+                        }
+                        {
+                        message.attachment &&
+                        !message.attachment.fileType.startsWith("image/")
+                        && message.attachment.fileType !== "application/pdf"
+                        && (
+                        <a
+                            href={`data:${message.attachment.fileType};base64,${message.attachment.fileData}`}
+                            download={message.attachment.fileName}
+                        >
+                            Download File
+                        </a>
+                        )
+                      }
                     </div>
                     <div className={`chat-footer text-[10px] text-gray-500 mt-1 ${message.senderId === authUser._id ? 'text-right' : 'text-left'}`}>
                       {new Date(message?.createdAt).toLocaleTimeString('en-IN', { hour: 'numeric', minute: 'numeric' })}
