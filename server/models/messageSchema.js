@@ -13,8 +13,14 @@ const messageSchema = mongoose.Schema({
     },
     message:{
         type:String,
-        required:true
+        default:''
     },
+    attachment: {
+        fileName: String,
+        fileType: String,
+        fileData: String
+    },
+    
     conversationId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Conversation',

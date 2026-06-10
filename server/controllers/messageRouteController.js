@@ -2,51 +2,68 @@ import Conversation from "../models/conversationModel.js";
 import Message from "../models/messageSchema.js";
 import { getRecieverSocketId ,io } from "../socket/socket.js";
 
-export const sendMessage =async(req,res)=>{
-try {
-    const {messages} = req.body;
-    const {id:reciverId} = req.params;
+export const sendMessage = async (req, res) => {
+  try {
+    const { messages } = req.body;
+    const { id: reciverId } = req.params;
     const senderId = req.user._id;
 
+    const textMessage = messages?.trim() || '';
+    const attachmentFile = req.file;
+    let attachment = null;
+        console.log("Attachment file:", attachmentFile);
+            if (attachmentFile) {
+                attachment = {
+                    fileName: attachmentFile.originalname,
+                    fileType: attachmentFile.mimetype,
+                    fileData: attachmentFile.buffer?.toString("base64"),
+                };
+            }
+
+    if (!textMessage && !attachment) {
+      return res.status(400).send({
+        success: false,
+        message: 'Message text or attachment is required.'
+      });
+    }
 
     let chats = await Conversation.findOne({
-        participants:{$all:[senderId , reciverId]}
-    })
+      participants: { $all: [senderId, reciverId] }
+    });
 
-    if(!chats){
-        chats = await Conversation.create({
-            participants:[senderId , reciverId],
-        })
+    if (!chats) {
+      chats = await Conversation.create({
+        participants: [senderId, reciverId],
+      });
     }
 
     const newMessages = new Message({
-        senderId,
-        reciverId,
-        message:messages,
-        conversationId: chats._id
-    })
+      senderId,
+      reciverId,
+      message: textMessage,
+      attachment,
+      conversationId: chats._id
+    });
 
-    if(newMessages){
-        chats.messages.push(newMessages._id);
+    if (newMessages) {
+      chats.messages.push(newMessages._id);
     }
 
-    await Promise.all([chats.save(),newMessages.save()]);
+    await Promise.all([chats.save(), newMessages.save()]);
 
-     //SOCKET.IO function 
-     const reciverSocketId = getRecieverSocketId(reciverId);
-     if(reciverSocketId){
-        io.to(reciverSocketId).emit("newMessage",newMessages)
-     }
+    const reciverSocketId = getRecieverSocketId(reciverId);
+    if (reciverSocketId) {
+      io.to(reciverSocketId).emit("newMessage", newMessages);
+    }
 
-    res.status(201).send(newMessages)
-
-} catch (error) {
+    res.status(201).send(newMessages);
+  } catch (error) {
     res.status(500).send({
-        success: false,
-        message: error
-    })
+      success: false,
+      message: error
+    });
     console.log(`error in sendMessage ${error}`);
-}
+  }
 }
 
 

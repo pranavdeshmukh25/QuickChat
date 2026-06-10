@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { IoArrowBackSharp, IoSend } from "react-icons/io5";
+import { IoArrowBackSharp, IoSend, IoAttach } from "react-icons/io5";
 import { TiMessages } from "react-icons/ti";
 import { useAuth } from "../../../context/authContext";
 import useConversationStore from "../../../zustand/useConversation";
@@ -13,6 +13,8 @@ const MessageContainer = ({ onBackUser }) => {
   const [loading, setLoading] = useState(false);
   const [sending, setSending] = useState(false);
   const [sendData, setSendData] = useState('');
+  const [attachment, setAttachment] = useState(null);
+  const fileInputRef = useRef(null);
   const {
     selectedConversation,
     setSelectedConversation,
@@ -24,7 +26,6 @@ const MessageContainer = ({ onBackUser }) => {
 
   useEffect(() => {
     socket?.on("newMessage", (newMessage) => {
-      console.log("New message received:", newMessage);
     const sound = new Audio(notify);
     sound.play();
     setMessage([...messages, newMessage]);
@@ -32,8 +33,6 @@ const MessageContainer = ({ onBackUser }) => {
     return () => socket?.off("newMessage");
     })
   }, [socket, setMessage, messages]);
-
-  console.log(messages);
 
    useEffect(()=>{
         setTimeout(()=>{
@@ -51,7 +50,6 @@ const MessageContainer = ({ onBackUser }) => {
         const data = await get.data;
         if (data.success === false) {
           setLoading(false);
-          console.log(data.message);
         }
         setLoading(false);
         setMessage(data);
@@ -68,24 +66,49 @@ const MessageContainer = ({ onBackUser }) => {
     setSendData(e.target.value);
   }
 
-  const handelSubmit=async(e)=>{
-        e.preventDefault();
-        setSending(true);
-        try {
-            const res =await axiosInstance.post(`/api/message/send/${selectedConversation?._id}`,{messages:sendData});
-            const data = await res.data;
-            if (data.success === false) {
-                setSending(false);
-                console.log(data.message);
-            }
-            setSending(false);
-            setSendData('')
-            setMessage([...messages,data])
-        } catch (error) {
-            setSending(false);
-            console.log(error);
-        }
+  const handleAttachmentChange = (e) => {
+    console.log(e.target.files);
+    if (e.target.files && e.target.files[0]) {
+      setAttachment(e.target.files[0]);
     }
+  }
+
+  const handleAttachmentClick = () => {
+    fileInputRef.current?.click();
+  }
+
+  const handelSubmit = async (e) => {
+    e.preventDefault();
+    if (!sendData.trim() && !attachment) {
+      return;
+    }
+
+    setSending(true);
+    try {
+      const formData = new FormData();
+      formData.append('messages', sendData);
+      if (attachment) {
+        formData.append('attachment', attachment);
+      }
+
+      const res = await axiosInstance.post(
+        `/api/message/send/${selectedConversation?._id}`,
+        formData
+      );
+      const data = await res.data;
+      if (data.success === false) {
+        setSending(false);
+        return;
+      }
+      setSending(false);
+      setSendData('');
+      setAttachment(null);
+      setMessage([...messages, data]);
+    } catch (error) {
+      setSending(false);
+      console.log(error);
+    }
+  }
 
   return (
     <div  className="md:min-w-[500px] h-[99%] flex flex-col">
@@ -152,6 +175,19 @@ const MessageContainer = ({ onBackUser }) => {
                         : 'bg-gray-800 border border-gray-700 rounded-t-lg rounded-r-lg'
                     }`}>
                       {message?.message}
+                      {
+                        message.attachment?.fileType?.startsWith("image/")
+                        && (
+                        <img
+                            src={`data:${message.attachment.fileType};base64,${message.attachment.fileData}`}
+                            alt="attachment"
+                            style={{
+                                width: "250px",
+                                borderRadius: "10px",
+                            }}
+                        />
+                        )
+                      }
                     </div>
                     <div className={`chat-footer text-[10px] text-gray-500 mt-1 ${message.senderId === authUser._id ? 'text-right' : 'text-left'}`}>
                       {new Date(message?.createdAt).toLocaleTimeString('en-IN', { hour: 'numeric', minute: 'numeric' })}
@@ -161,16 +197,41 @@ const MessageContainer = ({ onBackUser }) => {
               ))}
           </div>
            <form onSubmit={handelSubmit} className='rounded-full border border-gray-700 bg-gray-800'>
-            <div className='w-full rounded-full flex items-center'>
-              <input value={sendData} onChange={handleMessages} required id='message' type='text' 
-              className='w-full bg-transparent outline-none px-4 py-2 rounded-full text-gray-100 placeholder-gray-500'/>
+            <div className='w-full rounded-full flex items-center gap-2 px-2'>
+              <button
+                type='button'
+                onClick={handleAttachmentClick}
+                className='text-gray-300 hover:text-blue-400 transition p-2 rounded-full'
+              >
+                <IoAttach size={22} />
+              </button>
+              <input
+                ref={fileInputRef}
+                type='file'
+                hidden
+                onChange={handleAttachmentChange}
+              />
+              <input
+                value={sendData}
+                onChange={handleMessages}
+                id='message'
+                type='text'
+                placeholder={attachment ? `Attached: ${attachment.name}` : 'Type a message...'}
+                className='w-full bg-transparent outline-none px-4 py-2 rounded-full text-gray-100 placeholder-gray-500'
+              />
               <button type='submit' className='pr-2'>
-                {sending ? <div className='loading loading-spinner loading-sm text-blue-600'></div>:
-                <IoSend size={25}
-                className='text-blue-600 cursor-pointer hover:text-blue-500 transition'/>
+                {sending ? <div className='loading loading-spinner loading-sm text-blue-600'></div> :
+                  <IoSend size={25}
+                    className='text-blue-600 cursor-pointer hover:text-blue-500 transition'
+                  />
                 }
               </button>
             </div>
+            {attachment && (
+              <div className='px-4 pb-2 text-xs text-gray-400'>
+                Attached: {attachment.name}
+              </div>
+            )}
             </form>
         </>
       )}
